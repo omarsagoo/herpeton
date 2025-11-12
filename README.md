@@ -1,5 +1,13 @@
 # herpeton
+The Greek word herpeton (ἑρπετόν) means “creeping thing” or “reptile.”
+
+It comes from the Greek verb herpein (ἕρπειν), which means “to creep” or “to crawl.”
+The term reflects how these animals, such as snakes, lizards, and other reptiles, move close to the ground.
+
+The modern word herpetology literally means “the study of creeping animals.”
+
 ## Automated Reptile Species Classification Using the BioTrove Dataset
+
 
 ### AAI-521: Applied Computer Vision for AI  
 This project is a part of the AAI-521 course in the Applied Artificial Intelligence Program at the University of San Diego (USD). 
