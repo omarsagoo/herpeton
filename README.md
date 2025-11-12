@@ -1,5 +1,12 @@
-![Herpeton Logo](images/herpeton_logo.png)
-# herpeton
+## herpeton
+<div style="display: flex; align-items: center; justify-content: space-between;">
+  <div style="flex: 1;">
+    <img src="images/herpeton_logo.png" alt="Herpeton Logo" width="150">
+  </div>
+  <div style="flex: 2; text-align: right;">
+    <p><strong>herpeton</strong> is a computer vision project focused on reptile detection, conservation, and ecological monitoring using deep learning techniques.</p>
+  </div>
+</div>
 The Greek word herpeton (ἑρπετόν) means “creeping thing” or “reptile.”
 
 It comes from the Greek verb herpein (ἕρπειν), which means “to creep” or “to crawl.”
@@ -7,25 +14,25 @@ The term reflects how these animals, such as snakes, lizards, and other reptiles
 
 The modern word herpetology literally means “the study of creeping animals.”
 
-## Automated Reptile Species Classification Using the BioTrove Dataset
+# Automated Reptile Species Classification Using the BioTrove Dataset
 
 
-### AAI-521: Applied Computer Vision for AI  
+## AAI-521: Applied Computer Vision for AI  
 This project is a part of the AAI-521 course in the Applied Artificial Intelligence Program at the University of San Diego (USD). 
 
 **Project Status:** Active (In Progress)
 
-## Installation
+# Installation
 
-## Project Introduction / Objective
-The project develops a computer vision pipeline to identify **reptile species**—snakes, lizards, turtles, and geckos—from field imagery. Using the **BioTrove biodiversity dataset**, it explores how **CNNs**, **Vision Transformers (ViT)**, and **YOLOv10** can enhance conservation and biodiversity monitoring.
+# Project Introduction / Objective
+The project develops a computer vision pipeline to identify **reptile species** such as snakes, lizards, turtles, and geckos from field imagery. Using the **BioTrove biodiversity dataset**, it explores how **CNNs**, **Vision Transformers (ViT)**, and **YOLOv10** can enhance conservation and biodiversity monitoring.
 
-## Partner(s) / Contributor(s)
+# Partner(s) / Contributor(s)
 - Carrie Little, clittle@sandiego.edu
 - Dean Simmer, dsimmer@sandiego.edu
 - Omar Sagoo, osagoo@sandiego.edu
 
-## Methods Used
+# Methods Used
 - Deep Learning (CNNs, Vision Transformers)  
 - Object Detection (YOLOv10 / Ultralytics)  
 - Transfer Learning (ImageNet & BioTrove-CLIP)  
@@ -33,7 +40,7 @@ The project develops a computer vision pipeline to identify **reptile species**�
 - Model Evaluation & Visualization (Grad-CAM, Confusion Matrices)  
 - Ethics for AI and Responsible Wildlife Applications  
 
-## Technologies
+# Technologies
 - Python
 - Google Colab / Jupyter Notebook  
 - Hugging Face Datasets
@@ -43,7 +50,7 @@ The project develops a computer vision pipeline to identify **reptile species**�
 - OpenCV, PIL
 - TensorBoard
 
-## Project Description
+# Project Description
 
 This project leverages the **BioTrove-TRAIN Reptilia subset** from the **BioTrove dataset** (Hugging Face), containing ~1.3 million labeled reptile images across 189 species.  
 Images range from 224–1024 px and include taxonomy metadata (class, family, genus, species, scientific name, location).
