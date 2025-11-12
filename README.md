@@ -1,3 +1,4 @@
+![Herpeton Logo](images/herpeton_logo.png)
 # herpeton
 The Greek word herpeton (ἑρπετόν) means “creeping thing” or “reptile.”
 
