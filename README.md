@@ -29,7 +29,7 @@ The project develops a computer vision pipeline to identify **reptile species** 
 
 # Partner(s) / Contributor(s)
 - Carrie Little, clittle@sandiego.edu
-- Dean Simmer, dsimmer@sandiego.edu
+- Dean P. Simmer, dsimmer@sandiego.edu
 - Omar Sagoo, osagoo@sandiego.edu
 
 # Methods Used
