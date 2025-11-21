@@ -1,4 +1,4 @@
-## herpeton
+## $${\color{lightblue} HERPETON}$$
 <div style="display: flex; align-items: center; justify-content: space-between;">
   <div style="flex: 1;">
     <img src="images/herpeton_logo.png" alt="Herpeton Logo" width="150">
@@ -16,10 +16,10 @@ The modern word herpetology literally means “the study of creeping animals.”
 
 # Automated Reptile Species Classification Using the BioTrove Dataset
 
+## Applied Computer Vision for AI  
 
-## AAI-521: Applied Computer Vision for AI  
-
-**Project Status:** Active (In Progress)
+$${\color{White}Project \space Status}$$
+**:** $${\color{green}ACTIVE}$$
 
 # Project Introduction / Objective / Description
 
