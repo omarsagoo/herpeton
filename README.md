@@ -146,14 +146,10 @@ git clone <your-repo-url>
 cd herpeton
 
 # Create virtual environment (recommended)
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\\Scripts\\activate
-
-# Install required packages
-pip install -r requirements.txt
+make create
 
 # Start with the dataset
-python quick_start.py
+make quick
 ```
 
 ## Quick Setup
