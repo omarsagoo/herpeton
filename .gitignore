@@ -33,6 +33,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+.DS_Store
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -83,3 +84,13 @@ ui-tests/.pnp.*
 
 # Temporary files used for testing
 tmp/
+
+# Local env files
+.env
+
+*.cache
+
+data/biotrove_train/filtered_reptilia
+data/biotrove_train/processed_metadata
+data/biotrove_train/raw_metadata
+data/biotrove_train/images_reptilia
