@@ -1,0 +1,16 @@
+{
+  "total_samples": 17915,
+  "unique_species": 480,
+  "train_samples": 14151,
+  "val_samples": 2000,
+  "test_samples": 1764,
+  "min_images_per_class": 20,
+  "split_ratios": {
+    "train": 0.8,
+    "val": 0.1,
+    "test": 0.1
+  },
+  "rare_threshold": 1000,
+  "cap_threshold": 50,
+  "processing_date": "2025-11-25 14:59:35"
+}
