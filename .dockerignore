@@ -1,0 +1,5 @@
+*.ipynb
+biotrove_metadata/
+biotrove_processed/
+data/
+temp/
