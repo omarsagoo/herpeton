@@ -1,6 +1,6 @@
 # Variables
 ENV_NAME = herpeton          	 # Name of the conda environment
-PYTHON_VERSION = 3.12.2      	# Default Python version if environment.yml is not present
+PYTHON_VERSION = 3.12.8      	# Default Python version if environment.yml is not present
 ENV_FILE = environment.yml   		# Name of the environment file
 
 # Targets

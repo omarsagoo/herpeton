@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Herpeton Reptile Classifier</title>
+  <link rel="icon" type="image/png" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #0b1223;
+      --accent: #4ade80;
+      --accent-2: #22d3ee;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #1e293b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at 20% 20%, rgba(34,211,238,0.12), transparent 30%),
+                  radial-gradient(circle at 80% 0%, rgba(74,222,128,0.14), transparent 25%),
+                  var(--bg);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+    }
+    .shell {
+      width: min(960px, 100%);
+      background: linear-gradient(145deg, rgba(17, 24, 39, 0.8), rgba(15, 23, 42, 0.92));
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+      padding: 28px;
+      backdrop-filter: blur(6px);
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      padding-top: 6px;
+    }
+    .pill {
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 18px;
+    }
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(10, 15, 30, 0.8);
+      padding: 18px;
+    }
+    .drop {
+      border: 1.5px dashed var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.02);
+      padding: 20px;
+      text-align: center;
+      transition: border-color 160ms ease, background 160ms ease;
+    }
+    .drop.dragover {
+      border-color: var(--accent-2);
+      background: rgba(34, 211, 238, 0.06);
+    }
+    .drop h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+    .drop p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    button, .ghost-button {
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      border: none;
+    }
+    .primary {
+      background: linear-gradient(120deg, var(--accent), var(--accent-2));
+      color: #0b1223;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 15px;
+      transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+      box-shadow: 0 10px 30px rgba(34,211,238,0.25);
+    }
+    .primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    .primary:not(:disabled):hover { transform: translateY(-1px); }
+    .ghost-button {
+      background: transparent;
+      color: var(--text);
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+    }
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .preview {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+      background: #0b1223;
+    }
+    .preview[data-empty="true"] {
+      display: none;
+    }
+    .predictions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .pred {
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+    }
+    .pred-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .pred-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .pred-sci {
+      color: var(--muted);
+      font-size: 12px;
+      font-style: italic;
+      margin-top: 2px;
+    }
+    .pred-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .tag {
+      font-size: 11px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 4px 6px;
+      background: rgba(255,255,255,0.03);
+    }
+    .bar {
+      margin-top: 8px;
+      height: 6px;
+      border-radius: 999px;
+      background: #111827;
+      overflow: hidden;
+    }
+    .bar span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(120deg, var(--accent), var(--accent-2));
+    }
+    .badge {
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 4px 8px;
+    }
+    .error {
+      color: #fca5a5;
+      background: rgba(248,113,113,0.06);
+      border: 1px solid rgba(248,113,113,0.25);
+      padding: 10px 12px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+    .loader {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    .live-wrap {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+    .live-video {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #0b1223;
+      object-fit: cover;
+    }
+    .live-overlay {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      background: rgba(0,0,0,0.5);
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-size: 12px;
+    }
+    .live-video-wrap {
+      position: relative;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+      .live-wrap { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      body { padding: 18px; }
+      .shell { padding: 20px; }
+      header { flex-direction: column; align-items: flex-start; }
+      .title { font-size: 24px; }
+      .drop h3 { font-size: 16px; }
+      .drop p { font-size: 13px; }
+      .panel { padding: 16px; }
+      .primary, .ghost-button {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+      }
+      .preview { aspect-ratio: 1 / 1; }
+      .live-wrap { gap: 10px; }
+    }
+    @media (max-width: 600px) {
+      body { padding: 12px; }
+      .shell { padding: 16px; border-radius: 16px; }
+      header { gap: 6px; }
+      .title { font-size: 22px; }
+      .pill { font-size: 12px; padding: 6px 10px; }
+      .muted { font-size: 12px; }
+      .grid { gap: 12px; }
+      .panel { padding: 14px; }
+      .drop { padding: 14px; }
+      .primary, .ghost-button { font-size: 14px; padding: 11px 14px; }
+      .preview { aspect-ratio: 1 / 1; }
+      .live-video { aspect-ratio: 3 / 4; }
+      .live-wrap { gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div>
+        <div class="pill">Herpeton • Reptile ID</div>
+        <div class="title" style="padding-top: 6px;">Classify a reptile photo</div>
+        <div class="muted">Drop a photo or pick a file to see the most likely species.</div>
+      </div>
+      <div class="badge">Beta</div>
+    </header>
+
+    <div class="grid">
+      <div class="panel">
+        <div id="drop-zone" class="drop">
+          <h3>Drag & drop image</h3>
+          <p>Supported formats: jpg, png, webp.</p>
+          <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+            <button id="pick-btn" class="ghost-button" type="button">Choose a file</button>
+            <button id="predict-btn" class="primary" type="button" disabled>
+              <span class="btn-label">Predict</span>
+              <span class="btn-loader" style="display:none;"><div class="loader"></div></span>
+            </button>
+          </div>
+          <input id="file-input" type="file" accept="image/*" style="display:none;">
+          <div id="error" class="error" style="display:none;"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="muted" style="margin-bottom:8px;">Preview</div>
+        <img id="preview" class="preview" src="" alt="Preview will appear here" aria-hidden="true" data-empty="true">
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:16px;">
+      <div class="muted" style="margin-bottom:10px;">Top predictions</div>
+      <div id="predictions" class="predictions muted">Awaiting upload.</div>
+    </div>
+
+    <div class="panel" style="margin-top:16px;">
+      <div class="muted" style="margin-bottom:10px;">Live camera</div>
+      <div class="live-wrap">
+        <div class="live-video-wrap">
+          <video id="live-video" class="live-video" autoplay playsinline muted></video>
+          <div id="live-status" class="live-overlay">Camera idle</div>
+        </div>
+        <div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+            <button id="start-live" class="primary" type="button">Start camera</button>
+            <button id="stop-live" class="ghost-button" type="button" disabled>Stop</button>
+          </div>
+          <div class="muted" style="margin-bottom:10px;">We capture a frame every ~1.5s and send it for prediction.</div>
+          <div id="live-predictions" class="predictions muted">Camera inactive.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:16px;">
+      <div class="muted" style="margin-bottom:6px;">Model & implementation</div>
+      <div style="color: var(--text); line-height: 1.6; font-size: 14px;">
+        <p style="margin-top: 0;">
+          This demo uses the BioCLIP backbone (<code>imageomics/bioclip</code> via <code>open_clip</code>) with a frozen encoder and a small linear head trained on the BioTrove Reptilia subset (189 species). Inputs are normalized with the BioCLIP validation transform, fed through the encoder, and scored with a softmax over the reptile classes.
+        </p>
+        <p style="margin-bottom: 8px;">How inference works here:</p>
+        <ul style="margin: 0 0 8px 18px; padding: 0; color: var(--muted);">
+          <li>Uploaded images are converted to RGB, preprocessed with the BioCLIP pipeline, and run on the available device (CPU/GPU).</li>
+          <li>Live camera frames are downscaled (~640px wide), captured every ~1.5s, and sent to <code>/predict_frame</code> for scoring.</li>
+          <li>Top-k predictions come from the softmax probabilities over the 189-class head.</li>
+        </ul>
+        <p style="margin-bottom: 0;">
+          Only the BioCLIP model is used for both uploads and live feed; no additional detectors or models are involved.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const pickBtn = document.getElementById('pick-btn');
+    const predictBtn = document.getElementById('predict-btn');
+    const preview = document.getElementById('preview');
+    const predictionsEl = document.getElementById('predictions');
+    const errorEl = document.getElementById('error');
+    const btnLabel = document.querySelector('.btn-label');
+    const btnLoader = document.querySelector('.btn-loader');
+    const liveVideo = document.getElementById('live-video');
+    const liveStatus = document.getElementById('live-status');
+    const startLiveBtn = document.getElementById('start-live');
+    const stopLiveBtn = document.getElementById('stop-live');
+    const livePredictionsEl = document.getElementById('live-predictions');
+
+    let currentFile = null;
+    let liveStream = null;
+    let liveTimer = null;
+    let liveBusy = false;
+    let liveActive = false;
+
+    function setError(message) {
+      if (!message) {
+        errorEl.style.display = 'none';
+        errorEl.textContent = '';
+        return;
+      }
+      errorEl.textContent = message;
+      errorEl.style.display = 'block';
+    }
+
+    function setLoading(isLoading) {
+      predictBtn.disabled = isLoading || !currentFile;
+      btnLabel.style.display = isLoading ? 'none' : 'inline';
+      btnLoader.style.display = isLoading ? 'inline-flex' : 'none';
+    }
+
+    function updatePreview(file) {
+      if (!file) {
+        preview.src = '';
+        preview.setAttribute('aria-hidden', 'true');
+        preview.dataset.empty = 'true';
+        predictionsEl.innerHTML = 'Awaiting upload.';
+        return;
+      }
+      const url = URL.createObjectURL(file);
+      preview.src = url;
+      preview.setAttribute('aria-hidden', 'false');
+      preview.dataset.empty = 'false';
+    }
+
+    function handleFiles(files) {
+      const [file] = files;
+      if (!file) return;
+      currentFile = file;
+      predictBtn.disabled = false;
+      updatePreview(file);
+      setError('');
+    }
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      handleFiles(e.dataTransfer.files);
+    });
+
+    pickBtn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+
+    predictBtn.addEventListener('click', async () => {
+      if (!currentFile) return;
+      setError('');
+      setLoading(true);
+      const formData = new FormData();
+      formData.append('file', currentFile);
+
+      try {
+        const res = await fetch('/predict?top_k=3', {
+          method: 'POST',
+          body: formData
+        });
+        if (!res.ok) {
+          const detail = (await res.json()).detail || 'Prediction failed.';
+          throw new Error(detail);
+        }
+        const data = await res.json();
+        renderPredictions(predictionsEl, data.predictions || []);
+      } catch (err) {
+        setError(err.message || 'Unable to process image.');
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    function renderPredictions(targetEl, list) {
+      if (!list.length) {
+        targetEl.innerHTML = '<div class="muted">No predictions available.</div>';
+        return;
+      }
+      targetEl.innerHTML = list.map((item, idx) => {
+        const pct = Math.round((item.score || 0) * 100);
+        const displayName = item.display_name || item.common_name || item.scientific_name || item.label || 'Unknown';
+        const sci = item.scientific_name || item.label || '';
+        const tags = [
+          item.genus ? `Genus: ${item.genus}` : null,
+          item.family ? `Family: ${item.family}` : null,
+          item.order ? `Order: ${item.order}` : null,
+        ].filter(Boolean);
+        return `
+          <div class="pred">
+            <div class="pred-row">
+              <div>
+                <div class="pred-name">#${idx + 1} ${displayName}</div>
+                ${sci ? `<div class="pred-sci">${sci}</div>` : ''}
+              </div>
+              <div class="badge">${pct}%</div>
+            </div>
+            <div class="bar"><span style="width:${pct}%"></span></div>
+            ${tags.length ? `<div class="pred-tags">${tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function setLiveStatus(text) {
+      liveStatus.textContent = text;
+    }
+
+    startLiveBtn.addEventListener('click', async () => {
+      if (liveActive) return;
+      setLiveStatus('Requesting camera...');
+      try {
+        liveStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+        liveVideo.srcObject = liveStream;
+        liveActive = true;
+        startLiveBtn.disabled = true;
+        stopLiveBtn.disabled = false;
+        setLiveStatus('Streaming...');
+        livePredictionsEl.classList.remove('muted');
+        livePredictionsEl.innerHTML = 'Capturing frames...';
+        liveTimer = setInterval(captureFrameAndPredict, 1500);
+      } catch (err) {
+        setError('Camera access denied or unavailable.');
+        setLiveStatus('Camera unavailable');
+      }
+    });
+
+    stopLiveBtn.addEventListener('click', () => {
+      stopLive();
+    });
+
+    function stopLive() {
+      liveActive = false;
+      startLiveBtn.disabled = false;
+      stopLiveBtn.disabled = true;
+      if (liveTimer) {
+        clearInterval(liveTimer);
+        liveTimer = null;
+      }
+      if (liveStream) {
+        liveStream.getTracks().forEach((t) => t.stop());
+        liveStream = null;
+      }
+      liveVideo.srcObject = null;
+      setLiveStatus('Camera stopped');
+      livePredictionsEl.innerHTML = 'Camera inactive.';
+      liveBusy = false;
+    }
+
+    async function captureFrameAndPredict() {
+      if (!liveActive || liveBusy) return;
+      if (!liveVideo.videoWidth || !liveVideo.videoHeight) return;
+      liveBusy = true;
+
+      const targetWidth = 640;
+      const scale = Math.min(1, targetWidth / liveVideo.videoWidth);
+      const width = Math.max(1, Math.round(liveVideo.videoWidth * scale));
+      const height = Math.max(1, Math.round(liveVideo.videoHeight * scale));
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(liveVideo, 0, 0, width, height);
+
+      canvas.toBlob(async (blob) => {
+        if (!blob) {
+          liveBusy = false;
+          return;
+        }
+        const formData = new FormData();
+        formData.append('file', blob, 'frame.jpg');
+        try {
+          const res = await fetch('/predict_frame?top_k=3', {
+            method: 'POST',
+            body: formData
+          });
+          if (!res.ok) {
+            const detail = (await res.json()).detail || 'Prediction failed.';
+            throw new Error(detail);
+          }
+          const data = await res.json();
+          renderPredictions(livePredictionsEl, data.predictions || []);
+          setLiveStatus('Streaming...');
+        } catch (err) {
+          setLiveStatus('Prediction error');
+        } finally {
+          liveBusy = false;
+        }
+      }, 'image/jpeg', 0.82);
+    }
+  </script>
+</body>
+</html>
